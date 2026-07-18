@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="NetArchitect Lab — concevez et analysez une architecture réseau d'entreprise sécurisée." />
+    <title>NetArchitect Lab — Simulateur réseau</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Accueil NetArchitect Lab">
+        <span class="brand-mark">CT</span>
+        <span><strong>NetArchitect</strong><small>LAB</small></span>
+      </a>
+      <div class="status"><span></span> Simulateur local · aucune donnée envoyée</div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">LABORATOIRE DE CYBERSÉCURITÉ</p>
+          <h1>Concevez un réseau.<br /><em>Mesurez sa résistance.</em></h1>
+          <p class="intro">Créez une architecture d’entreprise segmentée, identifiez les risques et obtenez un plan de durcissement exploitable dans GNS3 et pfSense.</p>
+        </div>
+        <div class="hero-stat"><strong id="hero-score">—</strong><span>Score de sécurité</span></div>
+      </section>
+
+      <section class="workspace">
+        <aside class="panel config-panel">
+          <div class="panel-heading">
+            <div><span class="step">01</span><h2>Paramètres</h2></div>
+            <button class="text-button" id="demo-btn" type="button">Charger un exemple</button>
+          </div>
+
+          <form id="config-form">
+            <label class="field">Nom de l’organisation
+              <input id="org-name" name="orgName" maxlength="60" value="Entreprise Démo" required />
+            </label>
+            <label class="field">Nombre d’utilisateurs
+              <input id="users" name="users" type="number" min="1" max="2000" value="45" required />
+            </label>
+
+            <fieldset>
+              <legend>Services et accès</legend>
+              <label class="toggle"><span><b>Wi-Fi invités</b><small>Réseau réservé aux visiteurs</small></span><input id="guest-wifi" type="checkbox" checked /><i></i></label>
+              <label class="toggle"><span><b>Serveur public</b><small>Site ou application accessible en ligne</small></span><input id="public-server" type="checkbox" checked /><i></i></label>
+              <label class="toggle"><span><b>Accès distant</b><small>Connexion du personnel hors site</small></span><input id="remote-access" type="checkbox" checked /><i></i></label>
+            </fieldset>
+
+            <fieldset>
+              <legend>Mesures de protection</legend>
+              <label class="toggle"><span><b>Segmentation VLAN</b><small>Séparation logique des usages</small></span><input id="vlans" type="checkbox" checked /><i></i></label>
+              <label class="toggle"><span><b>IDS / IPS</b><small>Détection des activités suspectes</small></span><input id="ids" type="checkbox" /><i></i></label>
+              <label class="toggle"><span><b>MFA</b><small>Authentification multifacteur</small></span><input id="mfa" type="checkbox" /><i></i></label>
+              <label class="toggle"><span><b>Sauvegardes testées</b><small>Copies isolées et restaurations vérifiées</small></span><input id="backups" type="checkbox" checked /><i></i></label>
+            </fieldset>
+
+            <button class="primary-button" type="submit"><span>Analyser l’architecture</span><b>→</b></button>
+          </form>
+        </aside>
+
+        <div class="main-column">
+          <section class="panel exercise-panel" id="exercise-builder">
+            <div class="panel-heading"><div><span class="step">ÉNONCÉ</span><h2>Générateur de schéma depuis un exercice</h2></div><button class="text-button" id="exercise-example-btn" type="button">Insérer un exemple</button></div>
+            <label class="exercise-field">Collez ici l’exercice donné par le professeur
+              <textarea id="exercise-text" rows="6" placeholder="Exemple : Une entreprise de 45 utilisateurs veut séparer l’administration, le personnel et les invités avec des VLAN. Elle dispose d’un serveur web public dans une DMZ, d’un point d’accès Wi-Fi, d’un pare-feu pfSense et d’un accès Internet."></textarea>
+            </label>
+            <div class="exercise-actions">
+              <button class="primary-button generate-button" id="generate-schema-btn" type="button"><span>Générer le schéma</span><b>✦</b></button>
+              <button class="secondary-button" id="download-schema-btn" type="button" disabled>Télécharger le schéma SVG</button>
+            </div>
+            <div class="detected-items" id="detected-items"><span>Les équipements détectés apparaîtront ici.</span></div>
+            <div class="generated-schema empty-schema" id="generated-schema">
+              <div><b>Aucun schéma généré</b><span>Collez un énoncé réseau puis cliquez sur « Générer le schéma ».</span></div>
+            </div>
+            <p class="parser-note">L’analyseur reconnaît notamment : routeur, pfSense, pare-feu, switch, postes, serveurs, DMZ, Wi-Fi, Internet et VLAN.</p>
+          </section>
+
+          <section class="panel topology-panel">
+            <div class="panel-heading"><div><span class="step">02</span><h2>Topologie proposée</h2></div><span class="legend-safe">● Flux contrôlé</span></div>
+            <div class="topology" id="topology" aria-label="Schéma de la topologie réseau">
+              <div class="topo-row centered">
+                <article class="node internet"><span class="node-icon">◎</span><b>Internet</b><small>WAN</small></article>
+              </div>
+              <div class="connector vertical"></div>
+              <div class="topo-row centered">
+                <article class="node firewall"><span class="node-icon">◆</span><b>pfSense</b><small>Pare-feu + NAT</small></article>
+              </div>
+              <div class="connector vertical"></div>
+              <div class="topo-row centered">
+                <article class="node switch"><span class="node-icon">▦</span><b>Switch cœur</b><small>802.1Q</small></article>
+              </div>
+              <div class="branch-line"></div>
+              <div class="topo-row branches">
+                <article class="node endpoint"><span class="tag blue">VLAN 10</span><b>Administration</b><small>10.10.10.0/24</small><div class="node-counter" data-counter="adminDevices"><button type="button" aria-label="Retirer un poste administration">−</button><strong>4</strong><button type="button" aria-label="Ajouter un poste administration">+</button></div></article>
+                <article class="node endpoint"><span class="tag purple">VLAN 20</span><b>Personnel</b><small>10.10.20.0/24</small><div class="node-counter" data-counter="staffDevices"><button type="button" aria-label="Retirer un poste personnel">−</button><strong>35</strong><button type="button" aria-label="Ajouter un poste personnel">+</button></div></article>
+                <article class="node endpoint" id="guest-node"><span class="tag amber">VLAN 30</span><b>Invités</b><small>10.10.30.0/24</small><div class="node-counter" data-counter="guestDevices"><button type="button" aria-label="Retirer un appareil invité">−</button><strong>20</strong><button type="button" aria-label="Ajouter un appareil invité">+</button></div></article>
+                <article class="node endpoint" id="dmz-node"><span class="tag red">DMZ 40</span><b>Serveur public</b><small>10.10.40.0/24</small><div class="node-counter" data-counter="serverDevices"><button type="button" aria-label="Retirer un serveur">−</button><strong>2</strong><button type="button" aria-label="Ajouter un serveur">+</button></div></article>
+              </div>
+              <p class="designer-help">Utilisez les boutons <b>−</b> et <b>+</b> pour dimensionner chaque zone avant l’analyse.</p>
+            </div>
+          </section>
+
+          <section class="panel simulator-panel" id="traffic-simulator">
+            <div class="panel-heading"><div><span class="step">03</span><h2>Simulateur de trafic réseau</h2></div><span class="sim-status"><i></i> Équipements en ligne</span></div>
+            <div class="equipment-rack" aria-label="Équipements du laboratoire">
+              <article class="equipment"><span class="equipment-icon">◎</span><div><b>Internet</b><small>Cloud NAT</small></div><i></i></article>
+              <article class="equipment"><span class="equipment-icon">◆</span><div><b>pfSense</b><small>Pare-feu</small></div><i></i></article>
+              <article class="equipment"><span class="equipment-icon">▦</span><div><b>Switch</b><small>802.1Q</small></div><i></i></article>
+              <article class="equipment" id="rack-ap"><span class="equipment-icon">◉</span><div><b>Point d’accès</b><small>VLAN 30</small></div><i></i></article>
+              <article class="equipment" id="rack-server"><span class="equipment-icon">▤</span><div><b>Serveur</b><small>DMZ 40</small></div><i></i></article>
+              <article class="equipment"><span class="equipment-icon">▱</span><div><b>Postes</b><small>VLAN 10/20</small></div><i></i></article>
+            </div>
+
+            <form class="packet-form" id="packet-form">
+              <label>Équipement source<select id="packet-source"><option value="admin">PC Administration</option><option value="staff" selected>PC Personnel</option><option value="guest">Appareil invité</option><option value="dmz">Serveur DMZ</option><option value="internet">Machine Internet</option></select></label>
+              <span class="packet-arrow">→</span>
+              <label>Équipement destination<select id="packet-destination"><option value="internet" selected>Internet</option><option value="admin">PC Administration</option><option value="staff">PC Personnel</option><option value="guest">Appareil invité</option><option value="dmz">Serveur DMZ</option></select></label>
+              <label>Protocole<select id="packet-protocol"><option value="ICMP">ICMP / Ping</option><option value="DNS">DNS</option><option value="HTTP">HTTP</option><option value="HTTPS" selected>HTTPS</option><option value="SSH">SSH</option><option value="RDP">RDP</option></select></label>
+              <button class="primary-button packet-button" type="submit"><span>Envoyer le paquet</span><b>▶</b></button>
+            </form>
+
+            <div class="packet-stage" id="packet-stage">
+              <div class="packet-track"><span id="route-source">PC Personnel</span><div class="route-wire"><i id="packet-dot"></i></div><span id="route-middle">pfSense</span><div class="route-wire"><i></i></div><span id="route-destination">Internet</span></div>
+              <div class="packet-result idle" id="packet-result"><b>Prêt pour la simulation</b><span>Choisissez un flux puis envoyez le paquet.</span></div>
+            </div>
+
+            <div class="simulation-log">
+              <div class="log-heading"><b>Journal des paquets</b><button type="button" id="clear-log">Effacer</button></div>
+              <div class="table-wrap"><table><thead><tr><th>Heure</th><th>Source</th><th>Destination</th><th>Protocole</th><th>Décision</th><th>Explication</th></tr></thead><tbody id="simulation-log-body"><tr><td colspan="6" class="table-empty">Aucun paquet simulé.</td></tr></tbody></table></div>
+            </div>
+          </section>
+
+          <section class="results-grid" id="results" aria-live="polite">
+            <article class="panel score-card">
+              <div class="score-ring" id="score-ring"><strong id="score">—</strong><span>/100</span></div>
+              <div><p class="eyebrow">POSTURE GLOBALE</p><h2 id="grade">En attente d’analyse</h2><p id="score-summary">Configurez le réseau puis lancez l’analyse.</p></div>
+            </article>
+            <article class="panel metrics">
+              <div><span>Critiques</span><strong id="critical-count">0</strong></div>
+              <div><span>Élevés</span><strong id="high-count">0</strong></div>
+              <div><span>Actions</span><strong id="action-count">0</strong></div>
+            </article>
+          </section>
+
+          <section class="panel findings-panel">
+            <div class="panel-heading"><div><span class="step">04</span><h2>Constats et recommandations</h2></div><button class="secondary-button" id="download-btn" type="button" disabled>Télécharger le rapport</button></div>
+            <div id="findings" class="empty-state"><span>⌁</span><p>Les résultats apparaîtront ici après l’analyse.</p></div>
+          </section>
+
+          <section class="panel rules-panel">
+            <div class="panel-heading"><div><span class="step">05</span><h2>Règles pfSense recommandées</h2></div></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Source</th><th>Destination</th><th>Service</th><th>Action</th><th>Justification</th></tr></thead>
+                <tbody id="rules-body"><tr><td colspan="5" class="table-empty">Lancez une analyse pour générer les règles.</td></tr></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel lab-panel" id="lab-guides">
+            <div class="panel-heading"><div><span class="step">06</span><h2>Déploiement automatique du laboratoire</h2></div><button class="secondary-button" id="download-lab-btn" type="button" disabled>Télécharger les deux guides</button></div>
+            <div class="guide-tabs" role="tablist">
+              <button class="guide-tab active" type="button" data-guide="gns3" role="tab" aria-selected="true">Plan GNS3</button>
+              <button class="guide-tab" type="button" data-guide="pfsense" role="tab" aria-selected="false">Configuration pfSense</button>
+              <button class="copy-guide" id="copy-guide-btn" type="button" disabled>Copier</button>
+            </div>
+            <pre id="guide-output" class="guide-output">Lancez une analyse pour générer les procédures adaptées à votre architecture.</pre>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer><span>NetArchitect Lab · Projet pédagogique</span><span>Les recommandations doivent être validées avant toute mise en production.</span></footer>
+    <script src="app.js"></script>
+  </body>
+</html>
