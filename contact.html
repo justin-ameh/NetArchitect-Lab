@@ -1,34 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
-</head>
-<body>
-    <header>
-        <h1>Contact Us</h1>
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Contactez l'équipe de NetArchitect Lab pour toute question sur nos simulateurs ou nos tutoriels de cybersécurité." />
+    <title>Contact — NetArchitect Lab</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* Styles spécifiques ajoutés pour la page de contact */
+      .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px; }
+      .contact-image-wrapper { border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); height: 100%; min-height: 400px; position: relative; }
+      .contact-image-wrapper img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+      .contact-info-card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 32px; box-shadow: var(--shadow); }
+      .contact-info-card h3 { margin-top: 0; color: var(--text-dark); }
+      @media (max-width: 850px) { .contact-layout { grid-template-columns: 1fr; } .contact-image-wrapper { min-height: 250px; } }
+    </style>
+  </head>
+  <body>
+    <!-- En-tête -->
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">CT</span><span><strong>NetArchitect</strong><small>LAB</small></span>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html">Simulateur</a>
+        <a href="tutoriels.html">Tutoriels & Cours</a>
+        <a href="blog.html">Blog Sécurité</a>
+        <a href="contact.html" class="active">Contact</a>
+      </nav>
+      <div class="status"><span></span> Simulateur local</div>
     </header>
-    <main>
-        <section>
-            <h2>Get in Touch</h2>
-            <p>Email: contact@yourdomain.com | Phone: +1 234 567 8900</p>
-        </section>
-        <section>
-            <h2>Send a Message</h2>
-            <form action="/submit-form" method="POST">
-                <label for="name">Name:</label><br>
-                <input type="text" id="name" name="name" required><br><br>
-                
-                <label for="email">Email:</label><br>
-                <input type="email" id="email" name="email" required><br><br>
-                
-                <label for="message">Message:</label><br>
-                <textarea id="message" name="message" rows="5" required></textarea><br><br>
-                
-                <button type="submit">Send</button>
-            </form>
-        </section>
+
+    <main style="max-width: 1200px; margin: auto; padding: 60px 20px; min-height: 70vh;">
+      <p class="eyebrow">NOUS ÉCRIRE</p>
+      <h1 style="font-size: clamp(32px, 5vw, 48px); margin-bottom: 10px;">Contactez-nous</h1>
+      <p style="color: var(--muted); font-size: 18px; line-height: 1.6; max-width: 600px;">
+        Une question sur une topologie réseau ? Un bug sur le simulateur ? Ou une demande de partenariat ? Remplissez le formulaire ci-dessous.
+      </p>
+
+      <div class="contact-layout">
+        <!-- Colonne Gauche : Formulaire -->
+        <div class="contact-info-card">
+          <h3>Envoyer un message</h3>
+          <form action="#" method="POST">
+            <label class="field">Votre Nom
+              <input type="text" placeholder="Jean Dupont" required />
+            </label>
+            <label class="field">Adresse E-mail
+              <input type="email" placeholder="jean@entreprise.com" required />
+            </label>
+            <label class="field">Sujet de votre demande
+              <input type="text" placeholder="Ex: Problème avec pfSense" required />
+            </label>
+            <label class="field" style="grid-template-rows: auto 1fr;">Message
+              <textarea rows="5" placeholder="Détaillez votre demande ici..." required style="width: 100%; border-radius: 8px; border: 1px solid var(--line); background: #f8fafc; padding: 12px 14px; outline: none; resize: vertical; font-family: inherit;"></textarea>
+            </label>
+            <button class="primary-button" type="submit" style="margin-top: 10px;"><span>Envoyer le message</span><b>→</b></button>
+          </form>
+        </div>
+
+        <!-- Colonne Droite : Image + Infos -->
+        <div class="contact-image-wrapper">
+          <!-- Image professionnelle générique via Unsplash -->
+          <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80" alt="Serveurs informatiques et cybersécurité" />
+          
+          <!-- Petit encart par dessus l'image -->
+          <div style="position: absolute; bottom: 20px; left: 20px; right: 20px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.5);">
+            <h4 style="margin: 0 0 10px 0; color: var(--text-dark);">Nos coordonnées</h4>
+            <p style="margin: 0 0 5px 0; color: var(--muted); font-size: 13px;"><strong>Email:</strong> support@netarchitect-lab.com</p>
+            <p style="margin: 0; color: var(--muted); font-size: 13px;"><strong>Heures:</strong> Lundi - Vendredi, 9h00 - 18h00</p>
+          </div>
+        </div>
+      </div>
     </main>
-</body>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+      <div class="footer-info">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">CT</span><span><strong>NetArchitect</strong><small>LAB</small></span>
+        </a>
+        <p>Plateforme pédagogique dédiée à l'apprentissage de la cybersécurité.</p>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 NetArchitect Lab. Tous droits réservés.</span>
+      </div>
+    </footer>
+  </body>
 </html>
