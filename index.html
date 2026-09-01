@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="NetArchitect Lab — concevez et analysez une architecture réseau d'entreprise sécurisée. Tutoriels et simulateur interactif." />
     <title>NetArchitect Lab — Simulateur réseau et Cybersécurité</title>
+    <!-- AdSense Script - Remplacer par votre vrai ID -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2628532852073872" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="#" aria-label="Accueil NetArchitect Lab">
+      <a class="brand" href="index.html" aria-label="Accueil NetArchitect Lab">
         <span class="brand-mark">CT</span>
         <span><strong>NetArchitect</strong><small>LAB</small></span>
       </a>
       
-      <!-- NOUVEAU : Menu de navigation pour relier les autres pages -->
       <nav class="main-nav">
-        <a href="#" class="active">Simulateur</a>
+        <a href="index.html" class="active">Simulateur</a>
         <a href="tutoriels.html">Tutoriels & Cours</a>
         <a href="blog.html">Blog Sécurité</a>
         <a href="contact.html">Contact</a>
@@ -28,19 +28,20 @@
 
     <main>
       <section class="hero">
-        <div>
+        <div class="hero-content">
           <p class="eyebrow">LABORATOIRE ET FORMATION EN CYBERSÉCURITÉ</p>
           <h1>Concevez un réseau.<br /><em>Mesurez sa résistance.</em></h1>
           <p class="intro">Créez une architecture d’entreprise segmentée, identifiez les risques et obtenez un plan de durcissement. Un outil pédagogique pour les professionnels de l'IT et les étudiants.</p>
         </div>
-        <div class="hero-stat"><strong id="hero-score">—</strong><span>Score de sécurité</span></div>
+        <div class="hero-stat"><strong id="hero-score">—/100</strong><span>Score de sécurité</span></div>
       </section>
 
       <section class="workspace">
+        <!-- Barre latérale Paramètres -->
         <aside class="panel config-panel">
           <div class="panel-heading">
             <div><span class="step">01</span><h2>Paramètres</h2></div>
-            <button class="text-button" id="demo-btn" type="button">Charger un exemple</button>
+            <button class="text-button" id="demo-btn" type="button">Exemple</button>
           </div>
 
           <form id="config-form">
@@ -53,124 +54,131 @@
 
             <fieldset>
               <legend>Services et accès</legend>
-              <label class="toggle"><span><b>Wi-Fi invités</b><small>Réseau réservé aux visiteurs</small></span><input id="guest-wifi" type="checkbox" checked /><i></i></label>
-              <label class="toggle"><span><b>Serveur public</b><small>Site ou application accessible en ligne</small></span><input id="public-server" type="checkbox" checked /><i></i></label>
-              <label class="toggle"><span><b>Accès distant</b><small>Connexion du personnel hors site</small></span><input id="remote-access" type="checkbox" checked /><i></i></label>
+              <label class="toggle"><span><b>Wi-Fi invités</b><small>Réseau visiteurs isolé</small></span><input id="guest-wifi" type="checkbox" checked /><i></i></label>
+              <label class="toggle"><span><b>Serveur public</b><small>Accessible depuis Internet</small></span><input id="public-server" type="checkbox" checked /><i></i></label>
+              <label class="toggle"><span><b>Accès distant</b><small>VPN pour le personnel</small></span><input id="remote-access" type="checkbox" checked /><i></i></label>
             </fieldset>
 
             <fieldset>
               <legend>Mesures de protection</legend>
-              <label class="toggle"><span><b>Segmentation VLAN</b><small>Séparation logique des usages</small></span><input id="vlans" type="checkbox" checked /><i></i></label>
-              <label class="toggle"><span><b>IDS / IPS</b><small>Détection des activités suspectes</small></span><input id="ids" type="checkbox" /><i></i></label>
-              <label class="toggle"><span><b>MFA</b><small>Authentification multifacteur</small></span><input id="mfa" type="checkbox" /><i></i></label>
-              <label class="toggle"><span><b>Sauvegardes testées</b><small>Copies isolées et restaurations vérifiées</small></span><input id="backups" type="checkbox" checked /><i></i></label>
+              <label class="toggle"><span><b>VLANs</b><small>Segmentation logique</small></span><input id="vlans" type="checkbox" checked /><i></i></label>
+              <label class="toggle"><span><b>IDS / IPS</b><small>Détection d'intrusion</small></span><input id="ids" type="checkbox" /><i></i></label>
             </fieldset>
 
-            <button class="primary-button" type="submit"><span>Analyser l’architecture</span><b>→</b></button>
+            <button class="primary-button" type="submit"><span>Analyser le réseau</span><b>→</b></button>
           </form>
         </aside>
 
         <div class="main-column">
-          <!-- Les autres sections restent structurellement identiques, mais s'afficheront en clair grâce au CSS -->
-          <section class="panel exercise-panel" id="exercise-builder">
-            <div class="panel-heading"><div><span class="step">ÉNONCÉ</span><h2>Générateur depuis un exercice</h2></div><button class="text-button" id="exercise-example-btn" type="button">Insérer un exemple</button></div>
-            <label class="exercise-field">Collez ici l’exercice donné par le professeur
-              <textarea id="exercise-text" rows="4" placeholder="Exemple : Une entreprise de 45 utilisateurs veut séparer l’administration..."></textarea>
+          <!-- Générateur -->
+          <section class="panel">
+            <div class="panel-heading"><div><span class="step">IA</span><h2>Générateur de topologie</h2></div></div>
+            <label class="field" style="margin:0;">Collez ici l’énoncé d'un exercice ou un besoin réseau :
+              <textarea id="exercise-text" class="exercise-field" placeholder="Ex: Une entreprise de 50 employés souhaite séparer la comptabilité des autres services. Elle dispose d'un serveur web public et veut proposer un accès Wi-Fi à ses clients..."></textarea>
             </label>
-            <div class="exercise-actions">
-              <button class="primary-button generate-button" id="generate-schema-btn" type="button"><span>Générer le schéma</span><b>✦</b></button>
-              <button class="secondary-button" id="download-schema-btn" type="button" disabled>Télécharger en SVG</button>
-            </div>
-            <div class="generated-schema empty-schema" id="generated-schema">
-              <div><b>Aucun schéma généré</b><span>Collez un énoncé réseau puis cliquez sur « Générer le schéma ».</span></div>
+            <div style="display: flex; gap: 16px; margin-top: 16px;">
+              <button class="secondary-button" style="background:var(--primary-light); color:var(--primary); border:none;">✦ Générer via l'énoncé</button>
             </div>
           </section>
 
-          <section class="panel topology-panel">
-            <div class="panel-heading"><div><span class="step">02</span><h2>Topologie proposée</h2></div><span class="legend-safe">● Flux contrôlé</span></div>
+          <!-- Topologie -->
+          <section class="panel">
+            <div class="panel-heading"><div><span class="step">02</span><h2>Topologie du réseau</h2></div></div>
             <div class="topology" id="topology">
-              <div class="topo-row centered"><article class="node internet"><span class="node-icon">◎</span><b>Internet</b><small>WAN</small></article></div>
+              <div class="topo-row centered"><article class="node internet"><span class="node-icon">🌍</span><b>Internet</b><small>WAN</small></article></div>
               <div class="connector vertical"></div>
-              <div class="topo-row centered"><article class="node firewall"><span class="node-icon">◆</span><b>pfSense</b><small>Pare-feu + NAT</small></article></div>
+              <div class="topo-row centered"><article class="node firewall"><span class="node-icon">🛡️</span><b>pfSense</b><small>Pare-feu + NAT</small></article></div>
               <div class="connector vertical"></div>
-              <div class="topo-row centered"><article class="node switch"><span class="node-icon">▦</span><b>Switch cœur</b><small>802.1Q</small></article></div>
+              <div class="topo-row centered"><article class="node switch"><span class="node-icon">🔀</span><b>Switch Cœur</b><small>802.1Q (Trunk)</small></article></div>
               <div class="branch-line"></div>
               <div class="topo-row branches">
-                <article class="node endpoint"><span class="tag blue">VLAN 10</span><b>Administration</b><small>10.10.10.0/24</small><div class="node-counter"><button>−</button><strong>4</strong><button>+</button></div></article>
-                <article class="node endpoint"><span class="tag purple">VLAN 20</span><b>Personnel</b><small>10.10.20.0/24</small><div class="node-counter"><button>−</button><strong>35</strong><button>+</button></div></article>
-                <article class="node endpoint"><span class="tag amber">VLAN 30</span><b>Invités</b><small>10.10.30.0/24</small><div class="node-counter"><button>−</button><strong>20</strong><button>+</button></div></article>
+                <article class="node"><span class="tag blue">VLAN 10</span><b>Administration</b><small>10.10.10.0/24</small><div class="node-counter"><button>−</button><strong>4 PC</strong><button>+</button></div></article>
+                <article class="node"><span class="tag purple">VLAN 20</span><b>Personnel</b><small>10.10.20.0/24</small><div class="node-counter"><button>−</button><strong>35 PC</strong><button>+</button></div></article>
+                <article class="node"><span class="tag amber">VLAN 30</span><b>Invités (Wi-Fi)</b><small>10.10.30.0/24</small><div class="node-counter"><button>−</button><strong>20 App.</strong><button>+</button></div></article>
+                <article class="node"><span class="tag red">DMZ 40</span><b>Serveur Web</b><small>10.10.40.0/24</small><div class="node-counter"><button>−</button><strong>2 Srv</strong><button>+</button></div></article>
               </div>
             </div>
           </section>
 
-          <section class="results-grid" id="results">
+          <!-- Résultats -->
+          <section class="results-grid">
             <article class="panel score-card">
-              <div class="score-ring" id="score-ring"><strong id="score">—</strong><span>/100</span></div>
-              <div><p class="eyebrow">POSTURE GLOBALE</p><h2 id="grade">En attente d’analyse</h2><p id="score-summary">Configurez le réseau puis lancez l’analyse.</p></div>
+              <div class="score-ring"><strong>85</strong></div>
+              <div><h2 style="margin-top:0;">Bonne posture globale</h2><p>L'architecture est segmentée, mais l'absence d'IDS/IPS et de MFA laisse des risques sur l'accès VPN distant.</p></div>
             </article>
             <article class="panel metrics">
-              <div><span>Critiques</span><strong id="critical-count">0</strong></div>
-              <div><span>Élevés</span><strong id="high-count">0</strong></div>
-              <div><span>Actions</span><strong id="action-count">0</strong></div>
+              <div><span>Critiques</span><strong style="color:var(--red);">1</strong></div>
+              <div><span>Élevés</span><strong style="color:var(--amber);">2</strong></div>
+              <div><span>Actions</span><strong style="color:var(--primary);">4</strong></div>
             </article>
           </section>
         </div>
       </section>
 
-      <!-- NOUVEAU : Section Contenu pour rassurer AdSense (Thin Content Fix) -->
+      <!-- Section SEO / AdSense -->
       <section class="content-hub">
         <div class="content-header">
-          <h2>Ressources et Guides Pratiques</h2>
-          <a href="tutoriels.html" class="text-button">Voir tous les articles →</a>
+          <h2>Ressources et Cours Populaires</h2>
+          <a href="tutoriels.html" class="read-more" style="background: transparent; border: 1px solid var(--primary); color: var(--primary);">Voir tous les cours →</a>
         </div>
-        <div class="article-grid">
-          <article class="article-card">
-            <span class="tag blue">Tutoriel</span>
-            <h3>Comment configurer un VLAN sur pfSense ?</h3>
-            <p>Découvrez les étapes pas-à-pas pour segmenter votre réseau d'entreprise et isoler le trafic invité de votre infrastructure critique.</p>
-            <a href="article-vlan.html" class="read-more">Lire l'article</a>
+        <div class="course-grid">
+          <article class="course-card">
+            <img src="https://images.unsplash.com/photo-1551808525-51a94da548ce?auto=format&fit=crop&w=600&q=80" alt="Interface admin" class="course-image" style="height:180px;" />
+            <div class="course-content" style="padding: 24px;">
+              <span class="tag purple">Intermédiaire</span>
+              <h3 style="font-size: 18px;">Configuration complète de pfSense</h3>
+              <p style="font-size: 14px;">Déployez un pare-feu pfSense de A à Z : WAN/LAN, règles de filtrage (Firewall Rules) et NAT.</p>
+              <div class="course-footer" style="padding-top:16px;">
+                <a href="#" class="read-more" style="padding: 8px 12px; font-size: 13px;">Lire l'article</a>
+              </div>
+            </div>
           </article>
-          <article class="article-card">
-            <span class="tag purple">Concept</span>
-            <h3>Comprendre la zone démilitarisée (DMZ)</h3>
-            <p>Pourquoi exposer un serveur web directement sur votre LAN est dangereux et comment une DMZ réduit la surface d'attaque.</p>
-            <a href="article-dmz.html" class="read-more">Lire l'article</a>
+          <article class="course-card">
+            <img src="https://images.unsplash.com/photo-1614064642277-336338b97d26?auto=format&fit=crop&w=600&q=80" alt="Réseau" class="course-image" style="height:180px;" />
+            <div class="course-content" style="padding: 24px;">
+              <span class="tag red">Avancé</span>
+              <h3 style="font-size: 18px;">Création d'une DMZ Sécurisée</h3>
+              <p style="font-size: 14px;">Apprenez à isoler vos serveurs publics (Web, Mail) dans une Zone Démilitarisée (DMZ).</p>
+              <div class="course-footer" style="padding-top:16px;">
+                <a href="#" class="read-more" style="padding: 8px 12px; font-size: 13px;">Lire l'article</a>
+              </div>
+            </div>
           </article>
         </div>
       </section>
     </main>
 
-    <!-- NOUVEAU : Footer complet légal pour AdSense -->
+    <!-- Footer -->
     <footer class="main-footer">
-      <div class="footer-info">
-        <a class="brand" href="#">
-          <span class="brand-mark">CT</span><span><strong>NetArchitect</strong><small>LAB</small></span>
-        </a>
-        <p>Plateforme pédagogique dédiée à l'apprentissage de la cybersécurité et de l'architecture réseau.</p>
-      </div>
-      <div class="footer-links">
-        <div>
-          <h4>Outils</h4>
-          <a href="#">Simulateur</a>
-          <a href="#">Générateur GNS3</a>
+      <div class="footer-grid">
+        <div class="footer-info">
+          <a class="brand" href="index.html">
+            <span class="brand-mark">CT</span><span><strong>NetArchitect</strong><small>LAB</small></span>
+          </a>
+          <p>La plateforme pédagogique de référence dédiée à l'apprentissage de la cybersécurité, de l'architecture réseau et de la simulation de menaces.</p>
         </div>
-        <div>
+        <div class="footer-links">
+          <h4>Simulateur</h4>
+          <a href="index.html">Générateur GNS3</a>
+          <a href="#">Analyseur de topologie</a>
+          <a href="#">Export pfSense</a>
+        </div>
+        <div class="footer-links">
           <h4>Ressources</h4>
-          <a href="tutoriels.html">Tutoriels pfSense</a>
-          <a href="blog.html">Blog IT</a>
+          <a href="tutoriels.html">Cours Réseaux</a>
+          <a href="blog.html">Blog Cybersécurité</a>
         </div>
-        <div>
+        <div class="footer-links">
           <h4>Légal & Contact</h4>
-          <a href="mentions-legales.html">Mentions légales</a>
-          <a href="confidentialite.html">Politique de confidentialité</a>
           <a href="contact.html">Nous contacter</a>
+          <a href="mentions-legales.html">Mentions légales</a>
+          <a href="confidentialite.html">Confidentialité</a>
         </div>
       </div>
       <div class="footer-bottom">
-        <span>© 2024 NetArchitect Lab. Tous droits réservés.</span>
-        <span>Les recommandations générées doivent être validées avant mise en production.</span>
+        <span>© 2026 NetArchitect Lab. Tous droits réservés.</span>
+        <span>Conçu pour les étudiants et professionnels de l'IT.</span>
       </div>
     </footer>
-    <script src="app.js"></script>
   </body>
 </html>
