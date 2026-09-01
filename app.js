@@ -338,32 +338,46 @@ if (typeof document !== "undefined") {
   let simulationHistory = [];
 
   const updateEquipmentRack = () => {
-    document.querySelector("#rack-ap").classList.toggle("offline", !document.querySelector("#guest-wifi").checked);
-    document.querySelector("#rack-server").classList.toggle("offline", !document.querySelector("#public-server").checked);
+    // Note: ensure these IDs exist in your merged index.html
+    const rackAp = document.querySelector("#rack-ap");
+    const rackServer = document.querySelector("#rack-server");
+    if(rackAp) rackAp.classList.toggle("offline", !document.querySelector("#guest-wifi").checked);
+    if(rackServer) rackServer.classList.toggle("offline", !document.querySelector("#public-server").checked);
   };
   document.querySelectorAll("#guest-wifi, #public-server").forEach(input => input.addEventListener("change", updateEquipmentRack));
   updateEquipmentRack();
 
   const renderExerciseSchema = () => {
-    const exercise = document.querySelector("#exercise-text").value;
-    if (!exercise.trim()) {
-      document.querySelector("#generated-schema").className = "generated-schema empty-schema";
-      document.querySelector("#generated-schema").innerHTML = "<div><b>Ajoutez d’abord un exercice</b><span>Décrivez le réseau demandé par le professeur.</span></div>";
+    const exerciseNode = document.querySelector("#exercise-text");
+    if(!exerciseNode) return;
+    const exercise = exerciseNode.value;
+    const generatedSchema = document.querySelector("#generated-schema");
+    if (!exercise.trim() && generatedSchema) {
+      generatedSchema.className = "generated-schema empty-schema";
+      generatedSchema.innerHTML = "<div><b>Ajoutez d’abord un exercice</b><span>Décrivez le réseau demandé par le professeur.</span></div>";
       return;
     }
     const parsed = parseNetworkExercise(exercise);
     const svg = buildNetworkSvg(parsed);
     window.generatedNetworkSvg = svg;
-    document.querySelector("#generated-schema").className = "generated-schema";
-    document.querySelector("#generated-schema").innerHTML = svg;
+    
+    if (generatedSchema) {
+        generatedSchema.className = "generated-schema";
+        generatedSchema.innerHTML = svg;
+    }
+    
     const detected = [
       `${parsed.users} utilisateur(s)`, `${parsed.switches} switch(s)`,
       parsed.firewall ? "Pare-feu" : null, parsed.routers ? `${parsed.routers} routeur(s)` : null,
       parsed.wifi ? "Wi-Fi" : null, parsed.dmz ? "DMZ" : null,
       `${parsed.vlans.length} zone(s) réseau`
     ].filter(Boolean);
-    document.querySelector("#detected-items").innerHTML = detected.map(item => `<span class="detected-chip">✓ ${escapeHtml(item)}</span>`).join("") + parsed.warnings.map(item => `<span class="detected-warning">△ ${escapeHtml(item)}</span>`).join("");
-    document.querySelector("#download-schema-btn").disabled = false;
+    
+    const detectedItems = document.querySelector("#detected-items");
+    if(detectedItems) detectedItems.innerHTML = detected.map(item => `<span class="detected-chip">✓ ${escapeHtml(item)}</span>`).join("") + parsed.warnings.map(item => `<span class="detected-warning">△ ${escapeHtml(item)}</span>`).join("");
+    
+    const downloadSchemaBtn = document.querySelector("#download-schema-btn");
+    if(downloadSchemaBtn) downloadSchemaBtn.disabled = false;
 
     document.querySelector("#users").value = parsed.users;
     document.querySelector("#guest-wifi").checked = parsed.wifi;
@@ -373,29 +387,42 @@ if (typeof document !== "undefined") {
     deviceCounts.staffDevices = Math.max(1, parsed.users - deviceCounts.adminDevices);
     deviceCounts.guestDevices = parsed.wifi ? Math.max(1, Math.round(parsed.users * .25)) : 1;
     deviceCounts.serverDevices = Math.max(1, parsed.servers);
-    document.querySelectorAll(".node-counter").forEach(counter => { counter.querySelector("strong").textContent = deviceCounts[counter.dataset.counter]; });
+    document.querySelectorAll(".node-counter").forEach(counter => { 
+        const strong = counter.querySelector("strong");
+        if(strong) strong.textContent = deviceCounts[counter.dataset.counter] + " PC"; 
+    });
     updateEquipmentRack();
     const config = readConfig();
     render(config, calculateAssessment(config));
   };
 
-  document.querySelector("#exercise-example-btn").addEventListener("click", () => {
-    document.querySelector("#exercise-text").value = "Une entreprise de 45 utilisateurs possède un accès Internet, un pare-feu pfSense et un switch. Séparer l’administration, le personnel et les invités avec les VLAN 10, 20 et 30. Installer un point d’accès Wi-Fi pour les invités et placer un serveur web public dans une DMZ VLAN 40.";
-    renderExerciseSchema();
-  });
-  document.querySelector("#generate-schema-btn").addEventListener("click", renderExerciseSchema);
-  document.querySelector("#download-schema-btn").addEventListener("click", () => {
-    if (!window.generatedNetworkSvg) return;
-    const blob = new Blob([window.generatedNetworkSvg], { type: "image/svg+xml;charset=utf-8" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "schema-reseau-netarchitect.svg";
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
-  });
+  const exerciseBtn = document.querySelector("#exercise-example-btn");
+  if(exerciseBtn) {
+      exerciseBtn.addEventListener("click", () => {
+        document.querySelector("#exercise-text").value = "Une entreprise de 45 utilisateurs possède un accès Internet, un pare-feu pfSense et un switch. Séparer l’administration, le personnel et les invités avec les VLAN 10, 20 et 30. Installer un point d’accès Wi-Fi pour les invités et placer un serveur web public dans une DMZ VLAN 40.";
+        renderExerciseSchema();
+      });
+  }
+  
+  const generateBtn = document.querySelector("#generate-schema-btn");
+  if(generateBtn) generateBtn.addEventListener("click", renderExerciseSchema);
+  
+  const downloadSchemaBtn = document.querySelector("#download-schema-btn");
+  if (downloadSchemaBtn) {
+      downloadSchemaBtn.addEventListener("click", () => {
+        if (!window.generatedNetworkSvg) return;
+        const blob = new Blob([window.generatedNetworkSvg], { type: "image/svg+xml;charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "schema-reseau-netarchitect.svg";
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      });
+  }
 
   const renderSimulationLog = () => {
     const body = document.querySelector("#simulation-log-body");
+    if(!body) return;
     if (!simulationHistory.length) {
       body.innerHTML = '<tr><td colspan="6" class="table-empty">Aucun paquet simulé.</td></tr>';
       return;
@@ -405,75 +432,99 @@ if (typeof document !== "undefined") {
 
   document.querySelectorAll(".node-counter").forEach(counter => {
     const key = counter.dataset.counter;
+    if(!key) return;
     const output = counter.querySelector("strong");
     const buttons = counter.querySelectorAll("button");
     const limits = key === "serverDevices" ? [1, 20] : [1, 500];
     buttons[0].addEventListener("click", () => {
       deviceCounts[key] = Math.max(limits[0], deviceCounts[key] - 1);
-      output.textContent = deviceCounts[key];
+      output.textContent = deviceCounts[key] + (key === "serverDevices" ? " Srv" : " PC");
     });
     buttons[1].addEventListener("click", () => {
       deviceCounts[key] = Math.min(limits[1], deviceCounts[key] + 1);
-      output.textContent = deviceCounts[key];
+      output.textContent = deviceCounts[key] + (key === "serverDevices" ? " Srv" : " PC");
     });
   });
-  document.querySelector("#config-form").addEventListener("submit", event => {
-    event.preventDefault();
-    const config = readConfig();
-    render(config, calculateAssessment(config));
-    document.querySelector("#results").scrollIntoView({ behavior: "smooth", block: "center" });
-  });
-  document.querySelector("#packet-form").addEventListener("submit", event => {
-    event.preventDefault();
-    const config = readConfig();
-    const packet = {
-      source: document.querySelector("#packet-source").value,
-      destination: document.querySelector("#packet-destination").value,
-      protocol: document.querySelector("#packet-protocol").value
-    };
-    const verdict = evaluateTraffic(config, packet);
-    document.querySelector("#route-source").textContent = equipmentLabels[packet.source];
-    document.querySelector("#route-middle").textContent = verdict.middle;
-    document.querySelector("#route-destination").textContent = equipmentLabels[packet.destination];
-    const dots = document.querySelectorAll(".route-wire i");
-    dots.forEach(dot => { dot.className = ""; void dot.offsetWidth; });
-    dots[0].className = `moving ${verdict.allowed ? "" : "blocked"}`;
-    setTimeout(() => { dots[1].className = `moving ${verdict.allowed ? "" : "blocked"}`; }, 620);
-    const resultBox = document.querySelector("#packet-result");
-    resultBox.className = `packet-result ${verdict.allowed ? "allowed" : "blocked"}`;
-    resultBox.innerHTML = `<b>${verdict.allowed ? "✓ Paquet autorisé" : "✕ Paquet bloqué"}</b><span>${escapeHtml(verdict.reason)}</span>`;
-    simulationHistory.unshift({ ...packet, ...verdict, time: new Date().toLocaleTimeString("fr-FR") });
-    simulationHistory = simulationHistory.slice(0, 12);
-    renderSimulationLog();
-  });
-  document.querySelector("#clear-log").addEventListener("click", () => {
-    simulationHistory = [];
-    renderSimulationLog();
-    const resultBox = document.querySelector("#packet-result");
-    resultBox.className = "packet-result idle";
-    resultBox.innerHTML = "<b>Prêt pour la simulation</b><span>Choisissez un flux puis envoyez le paquet.</span>";
-  });
-  document.querySelector("#demo-btn").addEventListener("click", () => {
-    document.querySelector("#org-name").value = "Clinique Horizon";
-    document.querySelector("#users").value = 120;
-    document.querySelector("#guest-wifi").checked = true;
-    document.querySelector("#public-server").checked = true;
-    document.querySelector("#remote-access").checked = true;
-    document.querySelector("#vlans").checked = true;
-    document.querySelector("#ids").checked = true;
-    document.querySelector("#mfa").checked = true;
-    document.querySelector("#backups").checked = true;
-    updateEquipmentRack();
-  });
-  document.querySelector("#download-btn").addEventListener("click", () => {
-    const html = reportHtml(window.netarchitectReport);
-    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `rapport-netarchitect-${window.netarchitectReport.config.orgName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.html`;
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
-  });
+
+  const configForm = document.querySelector("#config-form");
+  if (configForm) {
+      configForm.addEventListener("submit", event => {
+        event.preventDefault();
+        const config = readConfig();
+        render(config, calculateAssessment(config));
+        const resultsGrid = document.querySelector("#results");
+        if(resultsGrid) resultsGrid.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+  }
+
+  const packetForm = document.querySelector("#packet-form");
+  if(packetForm) {
+      packetForm.addEventListener("submit", event => {
+        event.preventDefault();
+        const config = readConfig();
+        const packet = {
+          source: document.querySelector("#packet-source").value,
+          destination: document.querySelector("#packet-destination").value,
+          protocol: document.querySelector("#packet-protocol").value
+        };
+        const verdict = evaluateTraffic(config, packet);
+        document.querySelector("#route-source").textContent = equipmentLabels[packet.source];
+        document.querySelector("#route-middle").textContent = verdict.middle;
+        document.querySelector("#route-destination").textContent = equipmentLabels[packet.destination];
+        const dots = document.querySelectorAll(".route-wire i");
+        dots.forEach(dot => { dot.className = ""; void dot.offsetWidth; });
+        dots[0].className = `moving ${verdict.allowed ? "" : "blocked"}`;
+        setTimeout(() => { dots[1].className = `moving ${verdict.allowed ? "" : "blocked"}`; }, 620);
+        const resultBox = document.querySelector("#packet-result");
+        resultBox.className = `packet-result ${verdict.allowed ? "allowed" : "blocked"}`;
+        resultBox.innerHTML = `<b>${verdict.allowed ? "✓ Paquet autorisé" : "✕ Paquet bloqué"}</b><span>${escapeHtml(verdict.reason)}</span>`;
+        simulationHistory.unshift({ ...packet, ...verdict, time: new Date().toLocaleTimeString("fr-FR") });
+        simulationHistory = simulationHistory.slice(0, 12);
+        renderSimulationLog();
+      });
+  }
+
+  const clearLogBtn = document.querySelector("#clear-log");
+  if (clearLogBtn) {
+      clearLogBtn.addEventListener("click", () => {
+        simulationHistory = [];
+        renderSimulationLog();
+        const resultBox = document.querySelector("#packet-result");
+        resultBox.className = "packet-result idle";
+        resultBox.innerHTML = "<b>Prêt pour la simulation</b><span>Choisissez un flux puis envoyez le paquet.</span>";
+      });
+  }
+
+  const demoBtn = document.querySelector("#demo-btn");
+  if(demoBtn) {
+      demoBtn.addEventListener("click", () => {
+        document.querySelector("#org-name").value = "Clinique Horizon";
+        document.querySelector("#users").value = 120;
+        document.querySelector("#guest-wifi").checked = true;
+        document.querySelector("#public-server").checked = true;
+        document.querySelector("#remote-access").checked = true;
+        document.querySelector("#vlans").checked = true;
+        document.querySelector("#ids").checked = true;
+        document.querySelector("#mfa").checked = true;
+        document.querySelector("#backups").checked = true;
+        updateEquipmentRack();
+      });
+  }
+
+  const downloadBtn = document.querySelector("#download-btn");
+  if(downloadBtn) {
+      downloadBtn.addEventListener("click", () => {
+        if(!window.netarchitectReport) return;
+        const html = reportHtml(window.netarchitectReport);
+        const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `rapport-netarchitect-${window.netarchitectReport.config.orgName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.html`;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      });
+  }
+
   document.querySelectorAll(".guide-tab").forEach(tab => tab.addEventListener("click", () => {
     if (!window.netarchitectGuides) return;
     window.activeGuide = tab.dataset.guide;
@@ -484,32 +535,92 @@ if (typeof document !== "undefined") {
     });
     document.querySelector("#guide-output").textContent = window.netarchitectGuides[window.activeGuide];
   }));
-  document.querySelector("#copy-guide-btn").addEventListener("click", async event => {
-    const text = window.netarchitectGuides?.[window.activeGuide];
-    if (!text) return;
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      const area = document.createElement("textarea");
-      area.value = text;
-      document.body.append(area);
-      area.select();
-      document.execCommand("copy");
-      area.remove();
-    }
-    event.currentTarget.textContent = "Copié ✓";
-    setTimeout(() => { event.currentTarget.textContent = "Copier"; }, 1400);
-  });
-  document.querySelector("#download-lab-btn").addEventListener("click", () => {
-    if (!window.netarchitectGuides) return;
-    const content = `${window.netarchitectGuides.gns3}\n\n${"=".repeat(72)}\n\n${window.netarchitectGuides.pfsense}`;
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "netarchitect-guides-gns3-pfsense.txt";
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
-  });
+  
+  const copyGuideBtn = document.querySelector("#copy-guide-btn");
+  if(copyGuideBtn) {
+      copyGuideBtn.addEventListener("click", async event => {
+        const text = window.netarchitectGuides?.[window.activeGuide];
+        if (!text) return;
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          const area = document.createElement("textarea");
+          area.value = text;
+          document.body.append(area);
+          area.select();
+          document.execCommand("copy");
+          area.remove();
+        }
+        event.currentTarget.textContent = "Copié ✓";
+        setTimeout(() => { event.currentTarget.textContent = "Copier"; }, 1400);
+      });
+  }
+
+  const downloadLabBtn = document.querySelector("#download-lab-btn");
+  if (downloadLabBtn) {
+      downloadLabBtn.addEventListener("click", () => {
+        if (!window.netarchitectGuides) return;
+        const content = `${window.netarchitectGuides.gns3}\n\n${"=".repeat(72)}\n\n${window.netarchitectGuides.pfsense}`;
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "netarchitect-guides-gns3-pfsense.txt";
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      });
+  }
+
+  // =======================================================================
+  // INTEGRATION CMS (SOLUTION 3) - CHARGEMENT DYNAMIQUE DU BLOG ET DES COURS
+  // =======================================================================
+  
+  const blogContainer = document.querySelector("#dynamic-blog-grid");
+  const courseContainer = document.querySelector("#dynamic-course-grid");
+
+  if (blogContainer) fetchContent('blog', blogContainer);
+  if (courseContainer) fetchContent('cours', courseContainer);
+}
+
+async function fetchContent(type, container) {
+  try {
+    // Remplacer plus tard l'URL par celle de votre API (ex: Strapi ou Sanity)
+    // const response = await fetch(`https://api.votre-serveur.com/api/${type}`);
+    // const data = await response.json();
+
+    // DONNEES DE TEST pour afficher le design en attendant la connexion au CMS :
+    const data = [
+      { 
+        titre: "Architecture Zero Trust", 
+        tag: "Avancé", 
+        image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=80", 
+        description: "Comment segmenter avec pfSense et implémenter des contrôles stricts sur l'ensemble de votre réseau local et distant." 
+      },
+      {
+        titre: "Sécuriser un point d'accès public", 
+        tag: "Intermédiaire", 
+        image: "https://images.unsplash.com/photo-1614064642277-336338b97d26?w=600&q=80", 
+        description: "Découvrez les bonnes pratiques pour isoler efficacement les visiteurs de votre réseau d'entreprise." 
+      }
+    ];
+
+    container.innerHTML = data.map(item => `
+      <article class="course-card">
+        <img src="${item.image}" alt="${item.titre}" class="course-image" />
+        <div class="course-content">
+          <span class="tag purple">${item.tag}</span>
+          <h3>${item.titre}</h3>
+          <p>${item.description}</p>
+          <div class="course-footer">
+            <a href="#" class="read-more">Lire la suite →</a>
+          </div>
+        </div>
+      </article>
+    `).join("");
+
+  } catch (error) {
+    console.error(`Erreur lors du chargement des ${type}:`, error);
+    container.innerHTML = "<p>Erreur de connexion au serveur.</p>";
+  }
 }
 
 if (typeof module !== "undefined" && module.exports) {
