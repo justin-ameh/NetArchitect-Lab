@@ -1,39 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mentions Légales</title>
-</head>
-<body>
-    <header>
-        <h1>Mentions Légales</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Mentions légales et politique de confidentialité du site NetArchitect Lab." />
+    <title>Mentions Légales — NetArchitect Lab</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .legal-content { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 40px; box-shadow: var(--shadow); }
+      .legal-content h2 { color: var(--primary); font-size: 20px; margin-top: 30px; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+      .legal-content p, .legal-content ul { color: var(--text-dark); font-size: 15px; line-height: 1.7; }
+      .legal-content strong { color: #000; }
+    </style>
+  </head>
+  <body>
+    <!-- En-tête -->
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">CT</span><span><strong>NetArchitect</strong><small>LAB</small></span>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html">Simulateur</a>
+        <a href="tutoriels.html">Tutoriels & Cours</a>
+        <a href="blog.html">Blog Sécurité</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="status"><span></span> Simulateur local</div>
     </header>
-    <main>
-        <section>
-            <h2>1. Éditeur du site (Website Publisher)</h2>
-            <p><strong>Nom de l'entreprise :</strong> [Company Name]<br>
-            <strong>Adresse :</strong> [Full Address]<br>
-            <strong>Numéro de SIRET :</strong> [SIRET Number]<br>
-            <strong>Email :</strong> [Contact Email]</p>
-        </section>
+
+    <main style="max-width: 900px; margin: auto; padding: 60px 20px; min-height: 70vh;">
+      <p class="eyebrow">TRANSPARENCE</p>
+      <h1 style="font-size: clamp(32px, 4vw, 42px); margin-bottom: 30px;">Mentions Légales & Confidentialité</h1>
+
+      <!-- Bloc contenant le texte légal -->
+      <div class="legal-content">
+        <p><em>Date de dernière mise à jour : 1er Septembre 2026</em></p>
         
-        <section>
-            <h2>2. Directeur de la publication (Publication Director)</h2>
-            <p><strong>Nom :</strong> [Name of the person legally responsible for content]</p>
-        </section>
-        
-        <section>
-            <h2>3. Hébergeur (Web Host)</h2>
-            <p><strong>Nom de l'hébergeur :</strong> [Host Company Name]<br>
-            <strong>Adresse :</strong> [Host Address]<br>
-            <strong>Téléphone :</strong> [Host Phone Number]</p>
-        </section>
-        
-        <section>
-            <h2>4. Données personnelles (Privacy & GDPR)</h2>
-            <p>Les informations recueillies via notre formulaire de contact sont traitées conformément à la réglementation RGPD. Vous disposez d'un droit d'accès, de rectification et de suppression de vos données en nous contactant à [Email].</p>
-        </section>
+        <h2>1. Éditeur du site</h2>
+        <p>Le site <strong>NetArchitect Lab</strong> est édité par :</p>
+        <ul>
+          <li><strong>Nom / Raison sociale :</strong> [Votre Nom ou Nom d'entreprise]</li>
+          <li><strong>Adresse :</strong> [Votre Adresse Postale]</li>
+          <li><strong>Email de contact :</strong> contact@netarchitect-lab.com</li>
+        </ul>
+
+        <h2>2. Hébergement</h2>
+        <p>Le site est hébergé par :</p>
+        <ul>
+          <li><strong>Société :</strong> Vercel Inc. (ou OVH, Hostinger, etc.)</li>
+          <li><strong>Adresse :</strong> 340 S Lemon Ave #4133 Walnut, CA 91789, USA</li>
+          <li><strong>Site web :</strong> https://vercel.com</li>
+        </ul>
+
+        <h2>3. Propriété Intellectuelle</h2>
+        <p>L'ensemble de ce site relève des législations françaises et internationales sur le droit d'auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés, y compris pour les documents iconographiques et photographiques. La reproduction de tout ou partie de ce site sur un support électronique quel qu'il soit est formellement interdite sauf autorisation expresse du directeur de la publication.</p>
+
+        <h2>4. Politique de Confidentialité & RGPD</h2>
+        <p>NetArchitect Lab s'engage à ce que la collecte et le traitement de vos données, effectués à partir du site, soient conformes au règlement général sur la protection des données (RGPD). Les données collectées via notre formulaire de contact ne sont utilisées que dans le but de répondre à vos demandes et ne sont jamais revendues à des tiers.</p>
+
+        <h2>5. Cookies et Publicités (Google AdSense)</h2>
+        <p>Ce site utilise Google AdSense pour diffuser des annonces publicitaires. Google utilise des cookies pour diffuser des annonces en fonction des visites antérieures des utilisateurs sur ce site ou sur d'autres pages web.</p>
+        <ul>
+          <li>L'utilisation de cookies publicitaires permet à Google et à ses partenaires de diffuser des annonces auprès des utilisateurs en fonction de leur navigation.</li>
+          <li>Les utilisateurs peuvent désactiver la publicité personnalisée dans les <a href="https://myadcenter.google.com/" target="_blank" style="color:var(--primary);">Paramètres des annonces Google</a>.</li>
+        </ul>
+      </div>
     </main>
-</body>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+      <div class="footer-info">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">CT</span><span><strong>NetArchitect</strong><small>LAB</small></span>
+        </a>
+        <p>Plateforme pédagogique dédiée à l'apprentissage de la cybersécurité et de l'architecture réseau.</p>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 NetArchitect Lab. Tous droits réservés.</span>
+      </div>
+    </footer>
+  </body>
 </html>
