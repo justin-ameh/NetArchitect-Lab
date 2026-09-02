@@ -583,19 +583,54 @@ if (typeof document !== "undefined") {
 
 async function fetchContent(type, container) {
   try {
-    // 1. L'URL complète avec "articles" à la fin
+    // 1. Votre URL Supabase vers la table "articles"
     const SUPABASE_URL = 'https://uqfwcvcfsqhyrndwvqfh.supabase.co/rest/v1/articles';
 
-    // 2. Votre clé publique stockée dans une variable
+    // 2. Votre clé publique Supabase
     const SUPABASE_KEY = 'sb_publishable_7EDLDQLtDprLVoDB5XVcrg_IjHt58b2';
 
-    // 3. On utilise la variable SUPABASE_KEY automatiquement
+    // 3. Appel à la base de données
     const response = await fetch(SUPABASE_URL, {
       headers: {
         'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`
       }
     });
+
+    // Petite sécurité : on vérifie si Supabase refuse l'accès
+    if (!response.ok) {
+      throw new Error(`Erreur réseau : ${response.status}`);
+    }
+
+    // 4. On transforme la réponse en données JavaScript (Tableau)
+    const data = await response.json();
+
+    // 5. On vérifie s'il y a des articles
+    if (data.length === 0) {
+      container.innerHTML = "<p>Aucun article publié pour le moment.</p>";
+      return;
+    }
+
+    // 6. On injecte les articles dans votre beau design
+    container.innerHTML = data.map(item => `
+      <article class="course-card">
+        <img src="${item.image_url}" alt="${item.titre}" class="course-image" />
+        <div class="course-content">
+          <span class="tag purple">${item.tag}</span>
+          <h3>${item.titre}</h3>
+          <p>${item.description}</p>
+          <div class="course-footer">
+            <a href="#" class="read-more">Lire la suite →</a>
+          </div>
+        </div>
+      </article>
+    `).join("");
+
+  } catch (error) {
+    console.error("Erreur de connexion à Supabase :", error);
+    container.innerHTML = "<p>Erreur lors du chargement des articles.</p>";
+  }
+}
 
     // ... la suite du code reste exactement la même
     // Remplacer plus tard l'URL par celle de votre API (ex: Strapi ou Sanity)
