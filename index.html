@@ -71,7 +71,10 @@
 
         <div class="main-column">
           <section class="panel">
-            <div class="panel-heading"><div><span class="step">IA</span><h2>Générateur de topologie</h2></div></div>
+            <div class="panel-heading">
+              <div><span class="step">IA</span><h2>Générateur de topologie</h2></div>
+              <button class="text-button" id="exercise-example-btn" type="button">Exemple type</button>
+            </div>
             <label class="field" style="margin:0;">Collez ici l’énoncé d'un exercice ou un besoin réseau :
               <textarea id="exercise-text" class="exercise-field" placeholder="Ex: Une entreprise de 50 employés souhaite séparer la comptabilité..."></textarea>
             </label>
@@ -95,10 +98,10 @@
               <div class="topo-row centered"><article class="node switch"><span class="node-icon">🔀</span><b>Switch Cœur</b><small>802.1Q (Trunk)</small></article></div>
               <div class="branch-line"></div>
               <div class="topo-row branches">
-                <article class="node"><span class="tag blue">VLAN 10</span><b>Administration</b><small>10.10.10.0/24</small><div class="node-counter" data-counter="adminDevices"><button type="button">−</button><strong>4</strong><button type="button">+</button></div></article>
+                <article class="node" id="rack-ap"><span class="tag blue">VLAN 10</span><b>Administration</b><small>10.10.10.0/24</small><div class="node-counter" data-counter="adminDevices"><button type="button">−</button><strong>4</strong><button type="button">+</button></div></article>
                 <article class="node"><span class="tag purple">VLAN 20</span><b>Personnel</b><small>10.10.20.0/24</small><div class="node-counter" data-counter="staffDevices"><button type="button">−</button><strong>35</strong><button type="button">+</button></div></article>
                 <article class="node" id="guest-node"><span class="tag amber">VLAN 30</span><b>Invités</b><small>10.10.30.0/24</small><div class="node-counter" data-counter="guestDevices"><button type="button">−</button><strong>20</strong><button type="button">+</button></div></article>
-                <article class="node" id="dmz-node"><span class="tag red">DMZ 40</span><b>Serveur Web</b><small>10.10.40.0/24</small><div class="node-counter" data-counter="serverDevices"><button type="button">−</button><strong>2</strong><button type="button">+</button></div></article>
+                <article class="node" id="dmz-node" id="rack-server"><span class="tag red">DMZ 40</span><b>Serveur Web</b><small>10.10.40.0/24</small><div class="node-counter" data-counter="serverDevices"><button type="button">−</button><strong>2</strong><button type="button">+</button></div></article>
               </div>
             </div>
           </section>
@@ -113,6 +116,73 @@
               <div><span>Élevés</span><strong id="high-count" style="color:var(--amber);">0</strong></div>
               <div><span>Actions</span><strong id="action-count" style="color:var(--primary);">0</strong></div>
             </article>
+          </section>
+
+          <!-- Simulateur de trafic et règles pfSense -->
+          <section class="panel">
+            <div class="panel-heading"><div><span class="step">03</span><h2>Simulateur de flux & Pare-feu</h2></div></div>
+            <form id="packet-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) gap: 16px; margin-bottom: 20px;">
+              <label class="field">Source
+                <select id="packet-source" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--line);">
+                  <option value="admin">PC Administration</option>
+                  <option value="staff">PC Personnel</option>
+                  <option value="guest">Appareil invité</option>
+                  <option value="dmz">Serveur DMZ</option>
+                  <option value="internet">Machine Internet</option>
+                </select>
+              </label>
+              <label class="field">Destination
+                <select id="packet-destination" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--line);">
+                  <option value="internet">Machine Internet</option>
+                  <option value="admin">PC Administration</option>
+                  <option value="staff">PC Personnel</option>
+                  <option value="guest">Appareil invité</option>
+                  <option value="dmz">Serveur DMZ</option>
+                </select>
+              </label>
+              <label class="field">Protocole / Service
+                <select id="packet-protocol" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--line);">
+                  <option value="HTTPS">HTTPS</option>
+                  <option value="HTTP">HTTP</option>
+                  <option value="DNS">DNS</option>
+                  <option value="SSH">SSH</option>
+                  <option value="RDP">RDP</option>
+                  <option value="ICMP">ICMP (Ping)</option>
+                </select>
+              </label>
+              <div style="display: flex; align-items: flex-end;">
+                <button class="primary-button" type="submit" style="width: 100%; justify-content: center;">Simuler le paquet</button>
+              </div>
+            </form>
+
+            <div id="packet-result" class="packet-result idle" style="padding: 16px; border-radius: 8px; margin-bottom: 20px; background: var(--panel-muted);">
+              <b>Prêt pour la simulation</b><span>Choisissez un flux puis envoyez le paquet.</span>
+            </div>
+
+            <div class="route-animation" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-size:13px; color:var(--muted);">
+              <span id="route-source">Source</span>
+              <span class="route-wire"><i></i></span>
+              <span id="route-middle">Équipement intermédiaire</span>
+              <span class="route-wire"><i></i></span>
+              <span id="route-destination">Destination</span>
+            </div>
+
+            <div style="overflow-x: auto;">
+              <table style="width:100%; border-collapse: collapse; margin-top: 15px;">
+                <thead>
+                  <tr style="background: var(--panel-muted); text-align: left;">
+                    <th style="padding: 10px; border-bottom: 1px solid var(--line);">Source</th>
+                    <th style="padding: 10px; border-bottom: 1px solid var(--line);">Destination</th>
+                    <th style="padding: 10px; border-bottom: 1px solid var(--line);">Service</th>
+                    <th style="padding: 10px; border-bottom: 1px solid var(--line);">Action</th>
+                    <th style="padding: 10px; border-bottom: 1px solid var(--line);">Justification</th>
+                  </tr>
+                </thead>
+                <tbody id="rules-body">
+                  <tr><td colspan="5" style="padding: 15px; text-align: center; color: var(--muted);">Lancez l'analyse pour afficher les règles pfSense recommandées.</td></tr>
+                </tbody>
+              </table>
+            </div>
           </section>
 
           <section class="panel">
