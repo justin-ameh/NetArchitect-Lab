@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maîtriser pfSense : Guide de démarrage — NetArchitect Lab</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">CT</span><span><strong>NetArchitect</strong><small>LAB</small></span>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html">Simulateur</a>
+        <a href="tutoriels.html" class="active">Tutoriels & Cours</a>
+        <a href="blog.html">Blog Sécurité</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="status"><span></span> Simulateur local</div>
+    </header>
+
+    <main style="max-width: 800px; margin: auto; padding: 60px 20px;">
+      <a href="tutoriels.html" class="text-button" style="display: inline-block; margin-bottom: 20px;">← Retour aux tutoriels</a>
+      
+      <span class="tag purple">Fondamental</span>
+      <h1 style="font-size: 38px; margin: 15px 0; color: var(--text-dark);">Maîtriser pfSense : Guide de démarrage</h1>
+      <p style="color: var(--muted); font-size: 14px; margin-bottom: 30px;">Temps de lecture estimé : 10 min • Niveau : Débutant</p>
+
+      <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=1000&q=80" alt="Illustration pfSense" style="width: 100%; height: 350px; object-fit: cover; border-radius: 12px; margin-bottom: 30px;" />
+
+      <div style="font-size: 16px; line-height: 1.8; color: var(--text);">
+        <p>pfSense est l'une des distributions de pare-feu et de routeur open-source les plus puissantes du marché. Ce guide vous accompagne dans l'installation et la configuration initiale de votre passerelle réseau.</p>
+        
+        <h3 style="color: var(--text-dark); margin-top: 30px;">1. Prérequis et installation</h3>
+        <p>Avant de commencer, assurez-vous de disposer d'une machine virtuelle ou physique équipée d'au moins deux interfaces réseau distinctes : une pour le WAN (Internet) et une pour le LAN (Réseau local).</p>
+        
+        <h3 style="color: var(--text-dark); margin-top: 30px;">2. Configuration des interfaces initiales</h3>
+        <p>Lors du premier démarrage, pfSense vous invite à assigner vos cartes réseau :</p>
+        <ul>
+          <li><strong>Interface WAN :</strong> Reçue généralement en DHCP par votre box ou routeur d'accès amont.</li>
+          <li><strong>Interface LAN :</strong> Configurée par défaut sur l'adresse IP <code>192.168.1.1</code>.</li>
+        </ul>
+        
+        <h3 style="color: var(--text-dark); margin-top: 30px;">3. Accès à l'interface d'administration web</h3>
+        <p>Connectez un poste sur le réseau LAN, ouvrez votre navigateur web et entrez l'adresse IP du LAN. Connectez-vous avec les identifiants par défaut (<code>admin</code> / <code>pfsense</code>) pour accéder au tableau de bord sécurisé.</p>
+      </div>
+    </main>
+
+    <footer class="main-footer">
+      <div class="footer-bottom" style="max-width:1300px; margin:auto;">
+        <span>© 2026 NetArchitect Lab. Tous droits réservés.</span>
+      </div>
+    </footer>
+  </body>
+</html>
