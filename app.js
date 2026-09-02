@@ -338,7 +338,6 @@ if (typeof document !== "undefined") {
   let simulationHistory = [];
 
   const updateEquipmentRack = () => {
-    // Note: ensure these IDs exist in your merged index.html
     const rackAp = document.querySelector("#rack-ap");
     const rackServer = document.querySelector("#rack-server");
     if(rackAp) rackAp.classList.toggle("offline", !document.querySelector("#guest-wifi").checked);
@@ -389,7 +388,7 @@ if (typeof document !== "undefined") {
     deviceCounts.serverDevices = Math.max(1, parsed.servers);
     document.querySelectorAll(".node-counter").forEach(counter => { 
         const strong = counter.querySelector("strong");
-        if(strong) strong.textContent = deviceCounts[counter.dataset.counter] + " PC"; 
+        if(strong) strong.textContent = deviceCounts[counter.dataset.counter]; 
     });
     updateEquipmentRack();
     const config = readConfig();
@@ -438,11 +437,11 @@ if (typeof document !== "undefined") {
     const limits = key === "serverDevices" ? [1, 20] : [1, 500];
     buttons[0].addEventListener("click", () => {
       deviceCounts[key] = Math.max(limits[0], deviceCounts[key] - 1);
-      output.textContent = deviceCounts[key] + (key === "serverDevices" ? " Srv" : " PC");
+      output.textContent = deviceCounts[key];
     });
     buttons[1].addEventListener("click", () => {
       deviceCounts[key] = Math.min(limits[1], deviceCounts[key] + 1);
-      output.textContent = deviceCounts[key] + (key === "serverDevices" ? " Srv" : " PC");
+      output.textContent = deviceCounts[key];
     });
   });
 
@@ -523,153 +522,6 @@ if (typeof document !== "undefined") {
         link.click();
         setTimeout(() => URL.revokeObjectURL(link.href), 1000);
       });
-  }
-
-  document.querySelectorAll(".guide-tab").forEach(tab => tab.addEventListener("click", () => {
-    if (!window.netarchitectGuides) return;
-    window.activeGuide = tab.dataset.guide;
-    document.querySelectorAll(".guide-tab").forEach(item => {
-      const active = item === tab;
-      item.classList.toggle("active", active);
-      item.setAttribute("aria-selected", String(active));
-    });
-    document.querySelector("#guide-output").textContent = window.netarchitectGuides[window.activeGuide];
-  }));
-  
-  const copyGuideBtn = document.querySelector("#copy-guide-btn");
-  if(copyGuideBtn) {
-      copyGuideBtn.addEventListener("click", async event => {
-        const text = window.netarchitectGuides?.[window.activeGuide];
-        if (!text) return;
-        try {
-          await navigator.clipboard.writeText(text);
-        } catch {
-          const area = document.createElement("textarea");
-          area.value = text;
-          document.body.append(area);
-          area.select();
-          document.execCommand("copy");
-          area.remove();
-        }
-        event.currentTarget.textContent = "Copié ✓";
-        setTimeout(() => { event.currentTarget.textContent = "Copier"; }, 1400);
-      });
-  }
-
-  const downloadLabBtn = document.querySelector("#download-lab-btn");
-  if (downloadLabBtn) {
-      downloadLabBtn.addEventListener("click", () => {
-        if (!window.netarchitectGuides) return;
-        const content = `${window.netarchitectGuides.gns3}\n\n${"=".repeat(72)}\n\n${window.netarchitectGuides.pfsense}`;
-        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "netarchitect-guides-gns3-pfsense.txt";
-        link.click();
-        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
-      });
-  }
-
-  // =======================================================================
-  // INTEGRATION CMS (SOLUTION 3) - CHARGEMENT DYNAMIQUE DU BLOG ET DES COURS
-  // =======================================================================
-  
-  const blogContainer = document.querySelector("#dynamic-blog-grid");
-  const courseContainer = document.querySelector("#dynamic-course-grid");
-
-  if (blogContainer) fetchContent('blog', blogContainer);
-  if (courseContainer) fetchContent('cours', courseContainer);
-}
-
-async function fetchContent(type, container) {
-  try {
-    // 1. Votre URL Supabase vers la table "articles"
-    const SUPABASE_URL = 'https://uqfwcvcfsqhyrndwvqfh.supabase.co/rest/v1/articles';
-
-    // 2. Votre clé publique Supabase
-    const SUPABASE_KEY = 'sb_publishable_7EDLDQLtDprLVoDB5XVcrg_IjHt58b2';
-
-    // 3. Appel à la base de données
-    const response = await fetch(SUPABASE_URL, {
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
-      }
-    });
-
-    // Petite sécurité : on vérifie si Supabase refuse l'accès
-    if (!response.ok) {
-      throw new Error(`Erreur réseau : ${response.status}`);
-    }
-
-    // 4. On transforme la réponse en données JavaScript (Tableau)
-    const data = await response.json();
-
-    // 5. On vérifie s'il y a des articles
-    if (data.length === 0) {
-      container.innerHTML = "<p>Aucun article publié pour le moment.</p>";
-      return;
-    }
-
-    // 6. On injecte les articles dans votre beau design
-    container.innerHTML = data.map(item => `
-      <article class="course-card">
-        <img src="${item.image_url}" alt="${item.titre}" class="course-image" />
-        <div class="course-content">
-          <span class="tag purple">${item.tag}</span>
-          <h3>${item.titre}</h3>
-          <p>${item.description}</p>
-          <div class="course-footer">
-            <a href="#" class="read-more">Lire la suite →</a>
-          </div>
-        </div>
-      </article>
-    `).join("");
-
-  } catch (error) {
-    console.error("Erreur de connexion à Supabase :", error);
-    container.innerHTML = "<p>Erreur lors du chargement des articles.</p>";
-  }
-}
-
-    // ... la suite du code reste exactement la même
-    // Remplacer plus tard l'URL par celle de votre API (ex: Strapi ou Sanity)
-    // const response = await fetch(`https://api.votre-serveur.com/api/${type}`);
-    // const data = await response.json();
-
-    // DONNEES DE TEST pour afficher le design en attendant la connexion au CMS :
-    const data = [
-      { 
-        titre: "Architecture Zero Trust", 
-        tag: "Avancé", 
-        image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=80", 
-        description: "Comment segmenter avec pfSense et implémenter des contrôles stricts sur l'ensemble de votre réseau local et distant." 
-      },
-      {
-        titre: "Sécuriser un point d'accès public", 
-        tag: "Intermédiaire", 
-        image: "https://images.unsplash.com/photo-1614064642277-336338b97d26?w=600&q=80", 
-        description: "Découvrez les bonnes pratiques pour isoler efficacement les visiteurs de votre réseau d'entreprise." 
-      }
-    ];
-
-    container.innerHTML = data.map(item => `
-      <article class="course-card">
-        <img src="${item.image}" alt="${item.titre}" class="course-image" />
-        <div class="course-content">
-          <span class="tag purple">${item.tag}</span>
-          <h3>${item.titre}</h3>
-          <p>${item.description}</p>
-          <div class="course-footer">
-            <a href="#" class="read-more">Lire la suite →</a>
-          </div>
-        </div>
-      </article>
-    `).join("");
-
-  } catch (error) {
-    console.error(`Erreur lors du chargement des ${type}:`, error);
-    container.innerHTML = "<p>Erreur de connexion au serveur.</p>";
   }
 }
 
