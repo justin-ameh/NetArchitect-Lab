@@ -3,12 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Tutoriels et cours complets sur la cybersécurité, pfSense et GNS3 par NetArchitect Lab." />
+    <meta name="description" content="Tutoriels et cours NetArchitect Lab : maîtrisez pfSense, la configuration des VLANs et la sécurité réseau." />
     <title>Tutoriels & Cours — NetArchitect Lab</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <!-- En-tête -->
     <header class="topbar">
       <a class="brand" href="index.html">
         <span class="brand-mark">CT</span><span><strong>NetArchitect</strong><small>LAB</small></span>
@@ -22,132 +21,48 @@
       <div class="status"><span></span> Simulateur local</div>
     </header>
 
-    <main>
-      <!-- En-tête de la page -->
-      <div style="text-align: center; max-width: 800px; margin: 0 auto 60px;">
-        <p class="eyebrow">CENTRE DE FORMATION</p>
-        <h1 style="margin-bottom: 24px;">Tutoriels & Cours Pratiques</h1>
-        <p style="color: var(--muted); font-size: 20px; line-height: 1.6;">
-          Apprenez à concevoir, configurer et sécuriser des architectures réseaux d'entreprise. De la théorie à la pratique sur GNS3 et pfSense.
+    <main style="max-width: 1200px; margin: auto; padding: 60px 20px; min-height: 70vh;">
+      <div style="text-align: center; margin-bottom: 60px;">
+        <p class="eyebrow">FORMATION ET GUIDES PRATIQUES</p>
+        <h1 style="font-size: clamp(32px, 5vw, 48px); margin-bottom: 20px; color: var(--text-dark);">Tutoriels & Cours Réseau</h1>
+        <p style="color: var(--muted); font-size: 18px; line-height: 1.6; max-width: 700px; margin: 0 auto;">
+          Apprenez pas à pas à concevoir, segmenter et sécuriser une infrastructure réseau professionnelle de A à Z.
         </p>
       </div>
 
-      <!-- Filtres (Esthétiques) -->
-      <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap;">
-        <button class="secondary-button" style="background: var(--bg); border-color: var(--primary); color: var(--primary);">Tous les cours</button>
-        <button class="secondary-button">Réseau & VLANs</button>
-        <button class="secondary-button">Firewall pfSense</button>
-        <button class="secondary-button">Laboratoire GNS3</button>
-        <button class="secondary-button">Sécurité Avancée</button>
-      </div>
-
-      <!-- Grille des Cours -->
       <div class="course-grid">
-        
-        <!-- Cours 1 -->
         <article class="course-card">
-          <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80" alt="Câbles réseau dans un switch" class="course-image" />
+          <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=80" alt="Configuration pfSense" class="course-image" />
           <div class="course-content">
-            <span class="tag blue">Débutant</span>
-            <h3>Les bases du routage et des VLANs</h3>
-            <p>Comprenez comment segmenter un réseau physique en plusieurs réseaux logiques (VLAN) pour isoler le trafic et augmenter la sécurité de votre infrastructure.</p>
+            <span class="tag purple">Fondamental</span>
+            <h3>Maîtriser pfSense : Guide de démarrage</h3>
+            <p>Apprenez à installer, configurer les interfaces WAN/LAN et mettre en place vos premiers pare-feu de manière efficace.</p>
             <div class="course-footer">
-              <div class="course-meta">
-                <span>⏱ 45 min</span>
-                <span>📚 5 chapitres</span>
-              </div>
-              <a href="#" class="read-more">Commencer le cours</a>
+              <span>Niveau Débutant</span>
+              <a href="cours-modele.html" class="read-more">Accéder au cours &rarr;</a>
             </div>
           </div>
         </article>
 
-        <!-- Cours 2 -->
         <article class="course-card">
-          <img src="https://images.unsplash.com/photo-1551808525-51a94da548ce?auto=format&fit=crop&w=800&q=80" alt="Interface d'administration sur ordinateur" class="course-image" />
+          <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80" alt="Architecture VLAN" class="course-image" />
           <div class="course-content">
-            <span class="tag purple">Intermédiaire</span>
-            <h3>Configuration complète de pfSense</h3>
-            <p>Déployez un pare-feu pfSense de A à Z : configuration des interfaces WAN/LAN, création des règles de filtrage (Firewall Rules) et mise en place du NAT.</p>
+            <span class="tag blue">Avancé</span>
+            <h3>Segmentation Avancée : Le guide des VLANs</h3>
+            <p>Isolez vos réseaux d'entreprise, séparez les invités du personnel et appliquez les règles du moindre privilège.</p>
             <div class="course-footer">
-              <div class="course-meta">
-                <span>⏱ 1h 30</span>
-                <span>📚 8 chapitres</span>
-              </div>
-              <a href="#" class="read-more">Commencer le cours</a>
+              <span>Niveau Avancé</span>
+              <a href="cours-modele.html" class="read-more">Accéder au cours &rarr;</a>
             </div>
           </div>
         </article>
-
-        <!-- Cours 3 -->
-        <article class="course-card">
-          <img src="https://images.unsplash.com/photo-1614064642277-336338b97d26?auto=format&fit=crop&w=800&q=80" alt="Schéma réseau abstrait" class="course-image" />
-          <div class="course-content">
-            <span class="tag red">Avancé</span>
-            <h3>Création d'une DMZ Sécurisée</h3>
-            <p>Apprenez à isoler vos serveurs publics (Web, Mail) dans une Zone Démilitarisée (DMZ). Règles strictes de flux entre LAN, WAN et DMZ pour éviter les rebonds.</p>
-            <div class="course-footer">
-              <div class="course-meta">
-                <span>⏱ 2h 00</span>
-                <span>📚 10 chapitres</span>
-              </div>
-              <a href="#" class="read-more">Commencer le cours</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- Cours 4 -->
-        <article class="course-card">
-          <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80" alt="Code sur un écran d'ordinateur" class="course-image" />
-          <div class="course-content">
-            <span class="tag amber">Expert</span>
-            <h3>Détection d'intrusion (IDS/IPS) avec Suricata</h3>
-            <p>Allez plus loin avec pfSense en installant et configurant le package Suricata. Analysez le trafic en temps réel et bloquez les menaces avant qu'elles n'entrent.</p>
-            <div class="course-footer">
-              <div class="course-meta">
-                <span>⏱ 3h 00</span>
-                <span>📚 12 chapitres</span>
-              </div>
-              <a href="#" class="read-more">Commencer le cours</a>
-            </div>
-          </div>
-        </article>
-
       </div>
     </main>
 
-    <!-- Footer -->
     <footer class="main-footer">
-      <div class="footer-grid">
-        <div class="footer-info">
-          <a class="brand" href="index.html">
-            <span class="brand-mark">CT</span><span><strong>NetArchitect</strong><small>LAB</small></span>
-          </a>
-          <p>La plateforme pédagogique de référence dédiée à l'apprentissage de la cybersécurité, de l'architecture réseau et de la simulation de menaces.</p>
-        </div>
-        <div class="footer-links">
-          <h4>Simulateur</h4>
-          <a href="index.html">Générateur GNS3</a>
-          <a href="#">Analyseur de topologie</a>
-          <a href="#">Export pfSense</a>
-        </div>
-        <div class="footer-links">
-          <h4>Ressources</h4>
-          <a href="tutoriels.html">Cours Réseaux</a>
-          <a href="blog.html">Blog Cybersécurité</a>
-          <a href="#">Documentation API</a>
-        </div>
-        <div class="footer-links">
-          <h4>Légal & Contact</h4>
-          <a href="contact.html">Nous contacter</a>
-          <a href="mentions-legales.html">Mentions légales</a>
-          <a href="confidentialite.html">Confidentialité</a>
-        </div>
-      </div>
-      <div class="footer-bottom">
+      <div class="footer-bottom" style="max-width:1300px; margin:auto;">
         <span>© 2026 NetArchitect Lab. Tous droits réservés.</span>
-        <span>Conçu pour les étudiants et professionnels de l'IT.</span>
       </div>
     </footer>
   </body>
 </html>
-
