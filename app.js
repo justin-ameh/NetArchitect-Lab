@@ -583,45 +583,21 @@ if (typeof document !== "undefined") {
 
 async function fetchContent(type, container) {
   try {
-    // Remplacez ces valeurs par celles de votre compte Contentful
-    const SPACE_ID = '6jyckcqjhbf6';
-    const ACCESS_TOKEN = 'MdTVCjh_cc_8EMHZnQ1hksNF_OXl7WwLFFpIblNChgE';
-    
-    // L'URL magique qui va chercher vos articles
-    const url = `https://cdn.contentful.com/spaces/${6jyckcqjhbf6}/environments/master/entries?access_token=${MdTVCjh_cc_8EMHZnQ1hksNF_OXl7WwLFFpIblNChgE}&content_type=cours`;
-    
-    const response = await fetch(url);
-    const data = await response.json();
+    // 1. L'URL complète avec "articles" à la fin
+    const SUPABASE_URL = 'https://uqfwcvcfsqhyrndwvqfh.supabase.co/rest/v1/articles';
 
-    container.innerHTML = data.items.map(item => {
-      // Contentful range les données dans 'fields'
-      const { titre, tag, description } = item.fields;
-      
-      // On récupère l'image associée (logique spécifique à Contentful)
-      const imageId = item.fields.image.sys.id;
-      const imageAsset = data.includes.Asset.find(asset => asset.sys.id === imageId);
-      const imageUrl = imageAsset ? `https:${imageAsset.fields.file.url}` : '';
+    // 2. Votre clé publique stockée dans une variable
+    const SUPABASE_KEY = 'sb_publishable_7EDLDQLtDprLVoDB5XVcrg_IjHt58b2';
 
-      return `
-        <article class="course-card">
-          <img src="${imageUrl}" alt="${titre}" class="course-image" />
-          <div class="course-content">
-            <span class="tag purple">${tag}</span>
-            <h3>${titre}</h3>
-            <p>${description}</p>
-            <div class="course-footer">
-              <a href="#" class="read-more">Lire la suite →</a>
-            </div>
-          </div>
-        </article>
-      `;
-    }).join("");
+    // 3. On utilise la variable SUPABASE_KEY automatiquement
+    const response = await fetch(SUPABASE_URL, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
 
-  } catch (error) {
-    console.error("Erreur CMS:", error);
-    container.innerHTML = "<p>Erreur de chargement des articles.</p>";
-  }
-}
+    // ... la suite du code reste exactement la même
     // Remplacer plus tard l'URL par celle de votre API (ex: Strapi ou Sanity)
     // const response = await fetch(`https://api.votre-serveur.com/api/${type}`);
     // const data = await response.json();
